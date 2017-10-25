@@ -25,7 +25,7 @@ SIZE = 70
 WIDTH = 8
 HEIGHT = 6
 stones = []
-perso = pygame.image.load("perso1.bmp").convert()
+perso = pygame.image.load("obj.bmp").convert()
 x_perso = 3
 y_perso = 3
 state = State.START
@@ -176,12 +176,9 @@ draw()
 state = State.PLAY_STONE
 
 while True:
-	# if direction== 'right':
-	# perso_x += 1
+	pos = pygame.mouse.get_pos()
 
-	# DISPLAYSURF.blit(perso, (perso_x, perso_y))
-	#print("pos:{}".format(pygame.mouse.get_pos()))
-
+	#evt = pygame.evt.poll()
 	for evt in pygame.event.get():
 		if evt.type == pygame.QUIT:
 			pygame.quit()
@@ -189,26 +186,27 @@ while True:
 			# pygame.display.update()
 			# fpsClock.tick(FPS)
 
-		if evt.type == pygame.MOUSEBUTTONDOWN:
+		if evt.type == pygame.MOUSEBUTTONDOWN and evt.button == 1:
+			"""
 			pos = pygame.mouse.get_pos()
 			x = evt.pos[0]
 			y = evt.pos[1]
 			#mouse_clique(x, y)
 			print("X:{}, Y:{}, pos:{}".format(x, y, pygame.mouse.get_pos()))
-			"""
+			
 			UP: 
 			b_down - motion -  b_up +
 			
 			DOWN:
 			b_down - motion -  b_up - b_down
 			"""
-			
-			if evt.button == 1:
-				pos = pygame.mouse.get_pos()
-				x = evt.pos[0]
-				y = evt.pos[1]
-				#mouse_clique(x,y)
-				print("X:{}, Y:{}, pos:{}".format(x,y, pygame.mouse.get_pos()))
+
+
+			pos = pygame.mouse.get_pos()
+			x = evt.pos[0]
+			y = evt.pos[1]
+			#mouse_clique(x,y)
+			print("X:{}, Y:{}, pos:{}".format(x,y, pygame.mouse.get_pos()))
 
 		pass
 	#print('OUT OF FOR')
