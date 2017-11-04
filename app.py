@@ -26,6 +26,7 @@ WIDTH = 8
 HEIGHT = 6
 stones = []
 perso = pygame.image.load("obj.bmp").convert()
+stoneImg = pygame.image.load("stone.bmp").convert()
 x_perso = 3
 y_perso = 3
 state = State.START
@@ -142,6 +143,8 @@ def get_square(x_pix, y_pix):
 				return (x,y)
 	return False
 
+print(get_square(237, 117))
+
 def draw():
 	fond = pygame.image.load("background.bmp").convert()
 	DISPLAYSURF.blit(fond, (0, 0))
@@ -154,6 +157,9 @@ def draw():
 			polygon(DISPLAYSURF, RED, (
 				(x, y + (SIZE / 5)), (x, y + SIZE), (x + SIZE / 2, y + (SIZE / 5 * 6)), (x + SIZE, y + SIZE),
 				(x + SIZE, y + SIZE / 5), (x + SIZE / 2, y), (x, y + SIZE / 5)), 2)
+	for s in stones:
+		pos = calculate_position(s[0], s[1], True)
+		DISPLAYSURF.blit(stoneImg, pos)
 	perso_x_pix, perso_y_pix = calculate_position(x_perso, y_perso, True)
 	DISPLAYSURF.blit(perso, (perso_x_pix, perso_y_pix))
 	pygame.display.flip()
@@ -163,12 +169,29 @@ draw()
 
 x_perso += 1
 
+def move():
+    global state, x_perso, y_perso
+    if state == State.MOVE:
+        if is_border(x_perso, y_perso):
+            state = State.GAME_OVER
+        else:
+            pos = get_direction(x_perso, y_perso)
+            if pos == False:
+                state = State.GAME_OVER
+            else:
+                x_perso = pos[0]
+                y_perso = pos[1]
+                draw()
+                state = State.PLAY_STONE
+
+
 def mouse_clique(x,y):
 	global state
 	if state == State.PLAY_STONE:
 		s = get_square(x,y)
 		if s != False and add_stone(s):
 			state = State.MOVE
+			draw()
 	#print(stones)
 
 draw()
