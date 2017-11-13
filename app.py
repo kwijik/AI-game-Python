@@ -104,7 +104,10 @@ def dijkstra(x,y, n=0):
 
 
 def get_direction(x, y):
-	known_cells = border_cells()
+	known_cells = []
+	for b in border_cells():
+		if (b not in stones):
+			known_cells.append(b)
 	current_cell = 0
 	while current_cell < len(known_cells):
 		nbs = get_neibours(known_cells[current_cell])
