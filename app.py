@@ -103,9 +103,10 @@ def dijkstra(x,y, n=0):
 
 
 def get_direction(x, y):
+	global stones
 	known_cells = []
 	for b in border_cells():
-		if (b not in stones):
+		if (b not in stones): # we can't go on the stone!!!
 			known_cells.append(b)
 	current_cell = 0
 	while current_cell < len(known_cells):
@@ -119,6 +120,7 @@ def get_direction(x, y):
 	return False
 
 def add_stone(n):
+	global x_perso, y_perso
 	x = n[0]
 	y = n[1]
 	if is_exist(n) and (x != x_perso or y != y_perso) and (n not in stones):
@@ -135,14 +137,14 @@ def gen_stones(num):
 				break
 	#print(stones)
 
-gen_stones(4)
+gen_stones(10) # 4 is not enought, the player will not win!!!
 
 def get_square(x_pix, y_pix):
 	for x_sqr in range(0, WIDTH):
 		for y_sqr in range(0,HEIGHT):
 			x,y = calculate_position(x_sqr, y_sqr)
 			if (x_pix>x and y_pix >y + SIZE/5) and (x_pix < x + SIZE and y_pix < y + SIZE):
-				return (x,y)
+				return (x_sqr,y_sqr)
 	return False
 
 print(get_square(237, 117))
