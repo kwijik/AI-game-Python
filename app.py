@@ -10,7 +10,7 @@ class State(Enum):
 	START = auto()
 	PLAY_STONE = auto()
 	MOVE = auto()
-
+	GAME_OVER = auto()
 
 
 pygame.init()
@@ -18,17 +18,16 @@ pygame.init()
 FPS = 30  # frames per second setting
 fpsClock = pygame.time.Clock()
 pygame.display.set_caption('Animation')
-# Ouverture de la fenêtre Pygame
-DISPLAYSURF = pygame.display.set_mode((640, 480))
+DISPLAYSURF = pygame.display.set_mode((640, 720))
 RED = (255, 0, 0)
 SIZE = 70
 WIDTH = 8
-HEIGHT = 6
+HEIGHT = 9
 stones = []
 perso = pygame.image.load("obj.bmp").convert()
 stoneImg = pygame.image.load("stone.bmp").convert()
 x_perso = 3
-y_perso = 3
+y_perso = 4
 state = State.START
 
 def calculate_position(x, y, is_perso=False):
@@ -149,7 +148,7 @@ def get_square(x_pix, y_pix):
 print(get_square(237, 117))
 
 def draw():
-	fond = pygame.image.load("background.bmp").convert()
+	fond = pygame.image.load("field.bmp").convert()
 	DISPLAYSURF.blit(fond, (0, 0))
 	for i in range(0, HEIGHT):
 		for j in range(0, WIDTH-1 + (i + 1) % 2):
