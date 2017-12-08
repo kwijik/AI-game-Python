@@ -12,10 +12,10 @@ class Position(object):
             for y in range(0, self.height):
                 if (self.is_exist((x,y))):
                     self.empty_cells.append((x,y))
-        self.x_perso = x
-        self.y_perso = y
+        self.x_perso = x_perso
+        self.y_perso = y_perso
         self.empty_cells.remove((self.x_perso,self.y_perso)) #
-
+        self.last_move = False
 
     def get_neibours(self, n):
         x = n[0]
@@ -37,27 +37,33 @@ class Position(object):
         return arr
 
 
-    def weight(self):  # we return the number "how difficult for computer-stones to win"
-        known_cells = []  # it's our
+    def weight(self): # we return the number "how difficult for computer-stones to win"
+        #print("weight() is called!")
+        known_cells = [] # it's our 
+        known_cells_weight = []
         for b in self.border_cells():
-            if (b not in position_now.stones):
+            if ( self.x_perso == b[0] and self.y_perso == b[1]):
+                return -9999
+            if(b not in self.stones):
                 known_cells.append(b)
-        if ((self.x_perso, self.y_perso) in known_cells):
-            return -99999
+                known_cells_weight.append(0)
+        #if ( (self.x_perso, self.y_perso) in known_cells):
+            #return -99999
         current_cell = 0
-        while current_cell < len(known_cells):  # go on border cells that are not stones
-            nbs = self.get_neibours(known_cells[current_cell])  # get neibours of these cells
+        while current_cell < len(known_cells): # go on border cells that are not stones 
+            nbs = self.get_neibours(known_cells[current_cell]) # get neibours of these cells
             for n in nbs:
-                # print("N: {} ; stones: {}".format(n, stones))
-                if n == (position_now.x_perso, position_now.y_perso):  # if person is on this cell
-                    return current_cell
-                if is_exist(n) and (n not in known_cells) and (n not in stones):
+            #print("N: {} ; stones: {}".format(n, stones))
+                if n == (self.x_perso, self.y_perso): # if person is on this cell
+                    return known_cells_weight[current_cell]
+                if self.is_exist(n) and (n not in known_cells) and (n not in self.stones):
                     known_cells.append(n)
+                    known_cells_weight.append(known_cells_weight[current_cell]+1)
+            
+            #print("N:{}; \nStones:{}; \nknown_cells:{}".format(n, stones, known_cells))
+            current_cell += 1
 
-                    # print("N:{}; \nStones:{}; \nknown_cells:{}".format(n, stones, known_cells))
-        current_cell += 1
-
-        return 99999
+        return 9999
 
 
     def get_children(self, maximizingPlayer):
@@ -122,6 +128,7 @@ class Position(object):
         self.empty_cells.remove((self.x_perso, self.y_perso))
         # print(self.empty_cells)
 
+"""
 
     def weight(self):
         # if ( self.x_perso)
@@ -141,5 +148,5 @@ class Position(object):
             current_cell += 1
 
         return 99999
-
+"""
     # border _ cells runs too many times!
