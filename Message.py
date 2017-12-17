@@ -56,7 +56,9 @@ class Message():
         print("HE works")
         if event.type == pygame.MOUSEMOTION:
             self.hovered = self.rect.collidepoint(event.pos)
+            print("If works")
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            print("Elif works")
             if self.hovered:
                 print("Command is called")
                 command()
