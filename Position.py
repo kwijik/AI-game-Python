@@ -3,11 +3,8 @@ from random import *
 
 
 class Position(object):
-    """docstring for Position"""
 
     def __init__(self, height, width, x_perso, y_perso):
-        #print(height, width, x_perso, y_perso)
-        #super(Position, self).__init__()
         self.stones = []
         self.height = height  
         self.width = width
@@ -42,30 +39,24 @@ class Position(object):
         return arr
 
 
-    def weight(self): # we return the number "how difficult for computer-stones to win"
-        #print("weight() is called!")
-        known_cells = [] # it's our 
+    def weight(self):
+        known_cells = []
         known_cells_weight = []
         for b in self.border_cells():
             if ( self.x_perso == b[0] and self.y_perso == b[1]):
                 return -9999
             if(b not in self.stones):
                 known_cells.append(b)
-                known_cells_weight.append(0) # distance from 
-        #if ( (self.x_perso, self.y_perso) in known_cells):
-            #return -99999
+                known_cells_weight.append(0)
         current_cell = 0
-        while current_cell < len(known_cells): # go on border cells that are not stones 
-            nbs = self.get_neibours(known_cells[current_cell]) # get neibours of these cells
+        while current_cell < len(known_cells):
+            nbs = self.get_neibours(known_cells[current_cell])
             for n in nbs:
-            #print("N: {} ; stones: {}".format(n, stones))
                 if n == (self.x_perso, self.y_perso): # if person is on this cell
                     return known_cells_weight[current_cell]
                 if self.is_exist(n) and (n not in known_cells) and (n not in self.stones):
                     known_cells.append(n)
                     known_cells_weight.append(known_cells_weight[current_cell]+1)
-            
-            #print("N:{}; \nStones:{}; \nknown_cells:{}".format(n, stones, known_cells))
             current_cell += 1
 
         return 9999 # means stones won
@@ -83,7 +74,6 @@ class Position(object):
             for n in neibours:
                 if (self.is_exist(n) and n not in self.stones):
                     child = self.clone()
-                    #print(n)
                     child.setPerson(n[0], n[1])
                     possible_movement.append(child)
         return possible_movement
@@ -95,7 +85,6 @@ class Position(object):
 
 
     def add_stone(self,n):
-        #global x_perso, y_perso
         x = n[0]
         y = n[1]
         if self.is_exist(n) and (x != self.x_perso or y != self.y_perso) and (n not in self.stones):
@@ -126,32 +115,8 @@ class Position(object):
         return c
 
     def setPerson(self,x,y):
-#print(x,y,self.empty_cells, self.stones)
         self.empty_cells.append((self.x_perso,self.y_perso))
         self.x_perso = x
         self.y_perso = y
         self.empty_cells.remove((self.x_perso,self.y_perso))
-        #print(self.empty_cells)
-
-"""
-    def weight(self):
-        # if ( self.x_perso)
-        known_cells = [] # it's our 
-        for b in self.border_cells():
-            if(b not in self.stones):
-                known_cells.append(b)
-        current_cell = 0
-        while current_cell < len(known_cells): # go on border cells that are not stones 
-            nbs = self.get_neibours(known_cells[current_cell]) # get neibours of these cells
-            for n in nbs:
-                if n == (self.x_perso, self.y_perso): # if person is on this cell
-                    return current_cell
-                if self.is_exist(n) and (n not in known_cells) and (n not in self.stones):
-                
-                    known_cells.append(n)
-            
-            current_cell += 1
-
-        return 99999
-"""
-# border _ cells runs too many times
+      

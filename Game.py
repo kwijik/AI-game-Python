@@ -5,7 +5,6 @@ import sys
 from enum import Enum, auto
 from Position import Position as Position
 
-#print(Position)
 class State(Enum):
     START = auto()
     PLAY_STONE = auto()
@@ -30,65 +29,41 @@ stoneImg = pygame.image.load("stone.bmp").convert()
 state = State.START
 
 position_now =  Position(HEIGHT, WIDTH, 5, 4)
-#position_now.setPerson(5,4)
 
-def alphabeta(node, depth, alpha, beta, maximizingPlayer): #returns tuple and the first value is weight where to go, temp1 is a position to go
-
-	# print(("   "*(3-depth)), "Alpha - Beta!, " , " " , maximizingPlayer, node.x_perso, node.y_perso, alpha, beta, node.stones)
+def alphabeta(node, depth, alpha, beta, maximizingPlayer):
 	if (depth == 0 or len(node.empty_cells)==0 ):
-		return (node.weight(), False) #  false means no positions to go
-	#print("weight from alphabeta!")
+		return (node.weight(), False)
 	weight1 = node.weight() # weight
-	'''
-	to make work our algo we need to check all the field 
-	and give some number
-	if it's big it's better for stones
-	if it's small it's better for hero
 
-	if algortithme understands that he loses he doesn't continue
-	TCEC - AI chess
-	'''
-	#print("weight from alphabeta ", weight1)
-	if (weight1 == 9999): 
-		return (weight1 + depth - 10, node) # to make the win more quicker
-
+	if (weight1 == 9999):
+		return (weight1 + depth - 10, node)
 	if (weight1 == -9999):
 		return (weight1 - depth + 10, node)
 	if (maximizingPlayer):
-		v = -99999 # weight of position if all the players play their best witg depth 
-		v_pos = False # position to go
+		v = -99999
+		v_pos = False
 		node_children = node.get_children(maximizingPlayer)
-		for child in node_children: # get all stone's positions
-			#print("For is here!")
-
+		for child in node_children:
 			temp = alphabeta(child, depth-1, alpha, beta, False) # the best position what human can do
-			# print(("   "*(3-depth)), "temp: ", temp[0])
-			if (temp[0] > v):  # 
-				#print("temp")
+			if (temp[0] > v):  #
 				v = temp[0]
 				v_pos = child
-			alpha = max(alpha, v) # the best position found for stones
-			if (beta <= alpha): # alpha  prunning goes here
+			alpha = max(alpha, v)
+			if (beta <= alpha):
 				break
-		#if(v_pos == False):
-			#print("v_pos is False!")
 		return (v, v_pos)
 	else:
 		v_pos = False
 		v = 99999
 
 		for child in node.get_children(maximizingPlayer):
-			#print("For !")
 			temp = alphabeta(child, depth-1, alpha, beta, True)
-			# print(("   "*(3-depth)), "temp: ", temp[0])
 			if (temp[0] < v):
 				v = temp[0]
 				v_pos = child
-			beta = min(beta, v)  # the best position found for human
-			if (beta <= alpha):  #  beta prunning goes here
+			beta = min(beta, v)
+			if (beta <= alpha):
 				break
-		#if(v_pos == False):
-				#print("ELSE: v_pos is False!")
 		return (v, v_pos)
 
 
@@ -130,9 +105,6 @@ def get_weights():
 				dict_weigts[(x, y)] = 99999
 	return dict_weigts
 
-
-# print(get_weights())
-
 def get_neibours(n):
 	x = n[0]
 	y = n[1]
@@ -148,23 +120,18 @@ def get_direction(position_now):
 		if(b not in position_now.stones):
 			known_cells.append(b)
 	current_cell = 0
-	while current_cell < len(known_cells): # go on border cells that are not stones 
-		nbs = get_neibours(known_cells[current_cell]) # get neibours of these cells
+	while current_cell < len(known_cells):
+		nbs = get_neibours(known_cells[current_cell])
 		for n in nbs:
-			#print("N: {} ; stones: {}".format(n, stones))
-			if n == (position_now.x_perso, position_now.y_perso): # if person is on this cell
+			if n == (position_now.x_perso, position_now.y_perso):
 				return known_cells[current_cell]
 			if is_exist(n) and (n not in known_cells) and (n not in position_now.stones):
-				
 				known_cells.append(n)
-			
-			#print("N:{}; \nStones:{}; \nknown_cells:{}".format(n, stones, known_cells))
 		current_cell += 1
-
 	return False
 
 
-position_now.placeRandom(NUMBER_OF_STONES) # number of stones
+position_now.placeRandom(NUMBER_OF_STONES)
 
 def get_square(x_pix, y_pix):
 	for x_sqr in range(0, WIDTH):
@@ -180,8 +147,6 @@ def draw():
 	DISPLAYSURF.blit(fond, (0, 0))
 	for i in range(0, HEIGHT):
 		for j in range(0, WIDTH-1 + (i + 1) % 2):
-			# x = 30 + j * 50 + i % 2 * 25
-			# y = 30 + i * 50
 			x, y = calculate_position(j, i, False)
 
 			polygon(DISPLAYSURF, RED, (
@@ -204,10 +169,7 @@ def move():
 	if state == State.MOVE:
 		if is_border(position_now.x_perso, position_now.y_perso):
 			state = State.GAME_OVER
-			#print(position_now.weight(), position_now.border_cells(), position_now.x_perso, position_now.y_perso)
-
-
-else:
+		else:
 			pos = get_direction(position_now)
 			if pos == False:
 				state = State.GAME_OVER
@@ -224,7 +186,6 @@ def mouse_clique(x,y):
 		if s != False and add_stone(s):
 			state = State.MOVE
 			draw()
-	#print(stones)
 
 draw()
 
@@ -240,9 +201,6 @@ while True:
 			pygame.quit()
 			sys.exit()
 		message.handle_event(event, buttonPressed )
-	#pygame.event.clear()
-	# print("in While ! ", state)
-
 	if (state == State.GAME_OVER):
 		draw()
 	elif (state == State.MOVE):
@@ -250,7 +208,7 @@ while True:
 		draw()
 	elif(state == State.PLAY_STONE):
 
-		temp = alphabeta(position_now, 2, -99999, 99999, True) # instead of infinity used 99999, True means stones
+		temp = alphabeta(position_now, 2, -99999, 99999, True)
 
 		print(temp[0])
 
